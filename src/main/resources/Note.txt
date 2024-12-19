@@ -1,0 +1,7 @@
+
+
+- Để dễ nhớ về các môi quan hệ trong JPA
+
+- @OneToOne() , OneToMany() , ManyToOne() , ManyToMany() ==> quan trọng cần truyền mappedBy để xác định đối tượng liên kết với nó
+còn tùy loại mà thuộc tính sẽ là List hay không
+- ở 1 trong 2 đối tượng cần có @JoinColumn(name = ? ) để chỉ định khóa ngoại

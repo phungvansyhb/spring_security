@@ -5,6 +5,7 @@ import lg.frontend.spring_security_section1.DTOs.response.UserListResponse;
 import lg.frontend.spring_security_section1.entities.User;
 import lg.frontend.spring_security_section1.models.CustomResponse;
 import lg.frontend.spring_security_section1.repositories.UserRepository;
+import lg.frontend.spring_security_section1.utils.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,8 +18,10 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    public CustomResponse<List<UserListResponse>> getAllUsers() {
-         List<User> users =  userRepository.find();
+    public CustomResponse<List<UserListResponse>> getAllUsers(String name , String email) {
+         String searchName = StringUtil.stringToSearchLike(name);
+         String searchEmail = StringUtil.stringToSearchLike(email);
+         List<User> users =  userRepository.findAllByNameLikeAndEmailLike(searchName , searchEmail);
          List<UserListResponse> userListResponses = users.stream().map(user -> {
              UserListResponse userListResponse = new UserListResponse();
              userListResponse.setId(user.getId());

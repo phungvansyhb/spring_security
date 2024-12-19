@@ -1,6 +1,7 @@
 package lg.frontend.spring_security_section1.entities;
 
 import jakarta.persistence.*;
+import lg.frontend.spring_security_section1.models.PaymentMethod;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -9,30 +10,28 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
-@Table(name = "cloth", schema = "public")
+@Table(name = "Bill", schema = "public")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
 @Builder
-public class Cloth {
+public class Bill {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
     private Long id;
 
-    String name;
+    @ManyToOne
+    @JoinColumn(name="user_id")
+    User user;
 
-    int price;
+    @OneToMany(mappedBy = "bill" , cascade = CascadeType.ALL)
+    List<BillItem> billItems;
 
-    int stock;
+    Long price;
 
-    String description;
-
-    String image;
-
-    @OneToMany(mappedBy = "cloth" , cascade = CascadeType.ALL)
-    private List<BillItem> billItems;
+    PaymentMethod paymentMethod;
 
     @CreationTimestamp
     LocalDateTime createdDate;
@@ -41,4 +40,6 @@ public class Cloth {
     LocalDateTime updatedDate;
 
     LocalDateTime deletedDate;
+
+
 }

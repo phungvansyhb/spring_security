@@ -6,6 +6,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "user", schema = "public")
@@ -36,6 +37,9 @@ public class User {
 
     @Column(name = "role", nullable = false)
     private String role;
+
+    @OneToMany(mappedBy = "user" , cascade = CascadeType.ALL)
+    private List<Bill> bill;
 
     @CreationTimestamp
     LocalDateTime createdDate;

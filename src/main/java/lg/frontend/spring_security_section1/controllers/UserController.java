@@ -20,8 +20,8 @@ public class UserController {
     private UserService userService;
 
     @GetMapping
-    public CustomResponse<List<UserListResponse>> getAllUsers() {
-        return userService.getAllUsers();
+    public CustomResponse<List<UserListResponse>> getAllUsers(@RequestParam(required = false) String name , @RequestParam(required = false) String email) {
+        return userService.getAllUsers(name , email);
     }
 
     @GetMapping("/{id}")
