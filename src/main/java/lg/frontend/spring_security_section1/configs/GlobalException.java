@@ -1,5 +1,6 @@
 package lg.frontend.spring_security_section1.configs;
 
+import lg.frontend.spring_security_section1.exceptions.ItemQuantityException;
 import lg.frontend.spring_security_section1.models.CustomResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
@@ -23,4 +24,8 @@ public class GlobalException {
         return new CustomResponse<>(false, HttpStatus.BAD_REQUEST.name(), errors);
     }
 
+    @ExceptionHandler(value = ItemQuantityException.class)
+    public CustomResponse<Map<String , String>> handleItemQuantityException(ItemQuantityException e) {
+        return new CustomResponse<>(false, HttpStatus.BAD_REQUEST.name(), Map.of("cause", e.getMessage()));
+    }
 }

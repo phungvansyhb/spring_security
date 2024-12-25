@@ -9,7 +9,5 @@ import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
-    List<User> findByDeletedDateIsNull();
-    List<User> findAllByNameAndEmail(String name, String email);
     List<User> findAllByNameLikeAndEmailLike(String name, String email);
 }

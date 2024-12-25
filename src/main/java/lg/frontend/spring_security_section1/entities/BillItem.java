@@ -1,11 +1,12 @@
 package lg.frontend.spring_security_section1.entities;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "BillItem", schema = "public")
+@Table(name = "bill_item", schema = "public")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -20,9 +21,10 @@ public class BillItem {
     @JoinColumn(name = "cloth_id")
     Cloth cloth;
 
-    int quantity;
+    Integer quantity;
 
-    @ManyToOne()
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="bill_id")
+    @JsonBackReference
     Bill bill;
 }

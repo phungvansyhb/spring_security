@@ -1,5 +1,7 @@
 package lg.frontend.spring_security_section1.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -35,10 +37,14 @@ public class User {
     @Column(name = "avatar")
     private String avatar;
 
+    @Column(name = "balance")
+    private Long balance;
+
     @Column(name = "role", nullable = false)
     private String role;
 
-    @OneToMany(mappedBy = "user" , cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user" , cascade = CascadeType.ALL , fetch = FetchType.LAZY)
+    @JsonBackReference
     private List<Bill> bill;
 
     @CreationTimestamp

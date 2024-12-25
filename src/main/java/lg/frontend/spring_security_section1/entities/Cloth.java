@@ -23,9 +23,9 @@ public class Cloth {
 
     String name;
 
-    int price;
+    Integer price;
 
-    int stock;
+    Integer stock;
 
     String description;
 
