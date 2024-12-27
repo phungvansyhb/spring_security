@@ -33,8 +33,8 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<User> createUser(@Validated @RequestBody CreateUserDTO user) {
-       return userService.createUser(user);
+    public ResponseEntity<User> createUser(@Validated @RequestBody CreateUserDTO createUserDTO) {
+       return userService.createUser(createUserDTO);
     }
 
     @PutMapping("/{id}")

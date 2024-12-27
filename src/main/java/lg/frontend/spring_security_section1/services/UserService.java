@@ -55,6 +55,7 @@ public class UserService {
                 .phone(user.getPhone())
                 .avatar(user.getAvatar())
                 .role(user.getRole().name())
+                .balance(0L)
                 .build();
         User newUser = userRepository.save(createUser);
         return new ResponseEntity<>(newUser, HttpStatus.CREATED);
