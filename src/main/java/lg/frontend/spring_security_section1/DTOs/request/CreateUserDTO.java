@@ -16,7 +16,7 @@ import lombok.*;
 public class CreateUserDTO {
     @NotEmpty(message = "Name is required")
     @Min(value = 2, message = "Name must be at least 2 characters long")
-    String name ;
+    String username ;
 
     @NotEmpty(message = "Email is required")
     @Email(message = "Email is not valid")

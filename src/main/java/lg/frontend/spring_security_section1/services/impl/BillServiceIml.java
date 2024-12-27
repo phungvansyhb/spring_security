@@ -74,7 +74,7 @@ public class BillServiceIml implements BillService {
         if(bill != null){
             BillDetail.UserBill userBill = new BillDetail.UserBill();
             userBill.setId(bill.getUser().getId());
-            userBill.setName(bill.getUser().getName());
+            userBill.setName(bill.getUser().getUsername());
             userBill.setAvatar(bill.getUser().getAvatar());
             userBill.setEmail(bill.getUser().getEmail());
 

@@ -2,6 +2,8 @@ package lg.frontend.spring_security_section1.services;
 
 import lg.frontend.spring_security_section1.DTOs.request.CreateUserDTO;
 import lg.frontend.spring_security_section1.DTOs.request.DepositAmount;
+import lg.frontend.spring_security_section1.DTOs.request.LoginDTO;
+import lg.frontend.spring_security_section1.DTOs.response.LoginResponseDTO;
 import lg.frontend.spring_security_section1.DTOs.response.UserListResponse;
 import lg.frontend.spring_security_section1.entities.User;
 import lg.frontend.spring_security_section1.models.CustomResponse;
@@ -10,11 +12,16 @@ import lg.frontend.spring_security_section1.utils.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -22,14 +29,17 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     public CustomResponse<List<UserListResponse>> getAllUsers(String name, String email) {
         String searchName = StringUtil.stringToSearchLike(name);
         String searchEmail = StringUtil.stringToSearchLike(email);
-        List<User> users = userRepository.findAllByNameLikeAndEmailLike(searchName, searchEmail);
+        List<User> users = userRepository.findAllByUsernameLikeAndEmailLike(searchName, searchEmail);
         List<UserListResponse> userListResponses = users.stream().map(user -> {
             UserListResponse userListResponse = new UserListResponse();
             userListResponse.setId(user.getId());
-            userListResponse.setName(user.getName());
+            userListResponse.setUsername(user.getUsername());
             userListResponse.setEmail(user.getEmail());
             userListResponse.setPassword("*****");
             userListResponse.setPhone(user.getPhone());
@@ -48,8 +58,8 @@ public class UserService {
     }
 
     public ResponseEntity<User> createUser(CreateUserDTO user) {
-        String hashedPass = StringUtil.hashPassword(user.getPassword());
-        User createUser = User.builder().name(user.getName())
+        String hashedPass = passwordEncoder.encode(user.getPassword());
+        User createUser = User.builder().username(user.getUsername())
                 .email(user.getEmail())
                 .password(hashedPass)
                 .phone(user.getPhone())
@@ -64,7 +74,7 @@ public class UserService {
     public ResponseEntity<User> updateUser(Long id, User user) {
         User existingUser = userRepository.findById(id).orElse(null);
         if (existingUser != null) {
-            existingUser.setName(user.getName());
+            existingUser.setUsername(user.getUsername());
             existingUser.setPassword(user.getPassword());
             User updatedUser = userRepository.save(existingUser);
             return new ResponseEntity<>(updatedUser, HttpStatus.OK);
@@ -90,7 +100,6 @@ public class UserService {
             return new CustomResponse<>(true, "ok", user);
         } else
             return new CustomResponse<>(false, "user not found", null);
-
     }
 
     public CustomResponse<Boolean> updateAvatar(Long id , MultipartFile file) {
@@ -117,4 +126,10 @@ public class UserService {
         }else
             return new CustomResponse<>(false, "user not found", null);
     }
+
+    public CustomResponse<LoginResponseDTO> login(LoginDTO loginDTO){
+
+        return new CustomResponse<>(false, "user not found", null);
+    }
+
 }

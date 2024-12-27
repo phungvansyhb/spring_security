@@ -1,0 +1,1 @@
+alter table public.user RENAME COLUMN "name" TO username;

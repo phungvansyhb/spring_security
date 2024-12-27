@@ -2,6 +2,8 @@ package lg.frontend.spring_security_section1.controllers;
 
 import lg.frontend.spring_security_section1.DTOs.request.CreateUserDTO;
 import lg.frontend.spring_security_section1.DTOs.request.DepositAmount;
+import lg.frontend.spring_security_section1.DTOs.request.LoginDTO;
+import lg.frontend.spring_security_section1.DTOs.response.LoginResponseDTO;
 import lg.frontend.spring_security_section1.DTOs.response.UserListResponse;
 import lg.frontend.spring_security_section1.entities.User;
 import lg.frontend.spring_security_section1.models.CustomResponse;
@@ -55,5 +57,10 @@ public class UserController {
     @PutMapping("/avatar/{id}")
     public CustomResponse<Boolean> updateAvatar(@PathVariable  Long id , @RequestParam("file") MultipartFile file ) {
         return userService.updateAvatar(id , file);
+    }
+
+    @PostMapping("/login")
+    public CustomResponse<LoginResponseDTO> login(@RequestBody LoginDTO loginDTO){
+        return userService.login(loginDTO);
     }
 }
