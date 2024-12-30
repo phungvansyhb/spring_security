@@ -44,6 +44,7 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.DELETE).hasRole("ADMIN")
                                 .requestMatchers("/api/admin/**").hasAnyRole("ADMIN")
                                 .requestMatchers("/api/users").authenticated()
+                                .requestMatchers("/api/role/**").permitAll()
                                 .requestMatchers("/api/login/**").permitAll()
                                 .requestMatchers("/welcome/**").permitAll()
                                 .anyRequest().authenticated())
@@ -65,7 +66,6 @@ public class SecurityConfig {
             if (user != null) {
                 return User.withUsername(user.getUsername())
                         .password(user.getPassword()) // trả về password stored in database and SS auto compare with password in request header
-                        .roles(user.getRole())
                         .build();
             } else {
                 throw new UsernameNotFoundException("User not found");

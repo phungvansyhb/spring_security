@@ -40,9 +40,6 @@ public class User {
     @Column(name = "balance")
     private Long balance;
 
-    @Column(name = "role", nullable = false)
-    private String role;
-
     @OneToMany(mappedBy = "user" , cascade = CascadeType.ALL , fetch = FetchType.LAZY)
     @JsonBackReference
     private List<Bill> bill;

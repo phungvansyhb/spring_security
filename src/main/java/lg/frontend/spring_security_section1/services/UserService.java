@@ -44,7 +44,6 @@ public class UserService {
             userListResponse.setPassword("*****");
             userListResponse.setPhone(user.getPhone());
             userListResponse.setAvatar(user.getAvatar());
-            userListResponse.setRole(user.getRole());
             userListResponse.setCreatedDate(user.getCreatedDate());
             userListResponse.setUpdatedDate(user.getUpdatedDate());
             return userListResponse;
@@ -64,7 +63,6 @@ public class UserService {
                 .password(hashedPass)
                 .phone(user.getPhone())
                 .avatar(user.getAvatar())
-                .role(user.getRole().name())
                 .balance(0L)
                 .build();
         User newUser = userRepository.save(createUser);
