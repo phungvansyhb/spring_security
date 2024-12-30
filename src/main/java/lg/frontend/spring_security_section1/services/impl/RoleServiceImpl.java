@@ -2,6 +2,7 @@ package lg.frontend.spring_security_section1.services.impl;
 
 import jakarta.transaction.Transactional;
 import lg.frontend.spring_security_section1.DTOs.request.CreateRoleDTO;
+import lg.frontend.spring_security_section1.DTOs.request.UpdateRoleDTO;
 import lg.frontend.spring_security_section1.DTOs.response.RoleDetailResponseDTO;
 import lg.frontend.spring_security_section1.DTOs.response.RoleResponseDTO;
 import lg.frontend.spring_security_section1.entities.*;
@@ -11,8 +12,6 @@ import lg.frontend.spring_security_section1.repositories.RolePermissionRepositor
 import lg.frontend.spring_security_section1.repositories.RoleRepository;
 import lg.frontend.spring_security_section1.repositories.RoleUserRepository;
 import lg.frontend.spring_security_section1.services.RoleService;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -78,7 +77,7 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public CustomResponse<RoleDetailResponseDTO> getDetailRole(Long id) {
-        try{
+        try {
             RoleDetailResponseDTO roleDetailResponseDTO = new RoleDetailResponseDTO();
             Role role = roleRepository.findById(id).orElse(null);
             if (role != null) {
@@ -100,15 +99,15 @@ public class RoleServiceImpl implements RoleService {
             } else {
                 return new CustomResponse<>(false, "Role not found", null);
             }
-        }catch(Exception e){
-            return new CustomResponse<>(false, "Role get detail error "+ e.getMessage(), null);
+        } catch (Exception e) {
+            return new CustomResponse<>(false, "Role get detail error " + e.getMessage(), null);
 
         }
 
     }
 
     @Override
-    public CustomResponse<RoleResponseDTO> updateRole(Long id, CreateRoleDTO createRoleDTO) {
+    public CustomResponse<RoleDetailResponseDTO> updateRole(Long id, UpdateRoleDTO updateRoleDTO) {
         return null;
     }
 

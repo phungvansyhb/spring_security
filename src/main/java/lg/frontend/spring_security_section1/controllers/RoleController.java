@@ -1,6 +1,7 @@
 package lg.frontend.spring_security_section1.controllers;
 
 import lg.frontend.spring_security_section1.DTOs.request.CreateRoleDTO;
+import lg.frontend.spring_security_section1.DTOs.request.UpdateRoleDTO;
 import lg.frontend.spring_security_section1.DTOs.response.RoleDetailResponseDTO;
 import lg.frontend.spring_security_section1.DTOs.response.RoleResponseDTO;
 import lg.frontend.spring_security_section1.models.CustomResponse;
@@ -23,6 +24,11 @@ public class RoleController {
     @GetMapping
     public CustomResponse<RoleDetailResponseDTO> getRoleDetail(@RequestParam Long roleId) {
         return roleService.getDetailRole(roleId);
+    }
+
+    @PutMapping("/{id}")
+    public CustomResponse<RoleDetailResponseDTO> updateRole(@PathVariable Long id ,  @RequestBody UpdateRoleDTO updateRoleDTO){
+        return roleService.updateRole( id, updateRoleDTO);
     }
 
 

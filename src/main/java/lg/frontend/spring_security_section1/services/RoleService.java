@@ -1,6 +1,7 @@
 package lg.frontend.spring_security_section1.services;
 
 import lg.frontend.spring_security_section1.DTOs.request.CreateRoleDTO;
+import lg.frontend.spring_security_section1.DTOs.request.UpdateRoleDTO;
 import lg.frontend.spring_security_section1.DTOs.response.RoleDetailResponseDTO;
 import lg.frontend.spring_security_section1.DTOs.response.RoleResponseDTO;
 import lg.frontend.spring_security_section1.models.CustomResponse;
@@ -16,7 +17,7 @@ public interface RoleService {
 
     CustomResponse<RoleDetailResponseDTO> getDetailRole(Long id);
 
-    CustomResponse<RoleResponseDTO> updateRole(Long id, CreateRoleDTO createRoleDTO);
+    CustomResponse<RoleDetailResponseDTO> updateRole(Long id, UpdateRoleDTO updateRoleDTO);
 
     CustomResponse<List<RoleResponseDTO>> deleteRole(Long[] ids);
 
