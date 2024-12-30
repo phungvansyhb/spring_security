@@ -107,8 +107,41 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
+    @Transactional
     public CustomResponse<RoleDetailResponseDTO> updateRole(Long id, UpdateRoleDTO updateRoleDTO) {
-        return null;
+        try{
+            Role role = roleRepository.findById(id).orElse(null);
+            if(role != null){
+                List<RolePermission> rolePermissions = new ArrayList<>();
+                updateRoleDTO.getPermissions().forEach(item -> {
+                    RolePermission rolePermission = new RolePermission();
+                    rolePermission.setPermission(item);
+                    rolePermission.setRole(role);
+                    rolePermissions.add(rolePermission);
+                });
+                if(!rolePermissions.isEmpty()){
+                    rolePermissionRepository.deleteAllByRoleId(role.getId());
+                    rolePermissionRepository.saveAll(rolePermissions);
+                }
+                List<RoleUser> roleUsers = new ArrayList<>();
+                updateRoleDTO.getUsers().forEach(item -> {
+                    RoleUser roleUser = new RoleUser();
+                    roleUser.setUser(item);
+                    roleUser.setRole(role);
+                    roleUsers.add(roleUser);
+                });
+                if(!roleUsers.isEmpty()){
+                    roleUserRepository.deleteAllByRoleId(role.getId());
+                    roleUserRepository.saveAll(roleUsers);
+                }
+                return new CustomResponse<>(true, "ok", null);
+            }else{
+                return new CustomResponse<>(false, "Role not found", null);
+            }
+        }catch (Exception e){
+            return new CustomResponse<>(false, "Role update error " + e.getMessage(), null);
+        }
+
     }
 
     @Override
