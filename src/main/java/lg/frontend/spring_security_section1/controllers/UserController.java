@@ -11,6 +11,7 @@ import lg.frontend.spring_security_section1.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -25,6 +26,7 @@ public class UserController {
     private UserService userService;
 
     @GetMapping
+    @PreAuthorize("hasAuthority('GET_USERS')")
     public CustomResponse<List<UserListResponse>> getAllUsers(@RequestParam(required = false) String name , @RequestParam(required = false) String email) {
         return userService.getAllUsers(name , email);
     }
@@ -35,7 +37,7 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<User> createUser(@Validated @RequestBody CreateUserDTO createUserDTO) {
+    public ResponseEntity<User> createUser(@RequestBody CreateUserDTO createUserDTO) {
        return userService.createUser(createUserDTO);
     }
 
@@ -57,10 +59,5 @@ public class UserController {
     @PutMapping("/avatar/{id}")
     public CustomResponse<Boolean> updateAvatar(@PathVariable  Long id , @RequestParam("file") MultipartFile file ) {
         return userService.updateAvatar(id , file);
-    }
-
-    @PostMapping("/login")
-    public CustomResponse<LoginResponseDTO> login(@RequestBody LoginDTO loginDTO){
-        return userService.login(loginDTO);
     }
 }

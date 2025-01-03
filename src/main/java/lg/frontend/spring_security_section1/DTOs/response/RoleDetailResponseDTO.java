@@ -1,13 +1,11 @@
 package lg.frontend.spring_security_section1.DTOs.response;
 
 import lg.frontend.spring_security_section1.entities.Permission;
-import lg.frontend.spring_security_section1.entities.User;
 import lombok.*;
 
 import java.time.LocalDate;
 import java.util.List;
 
-@Data
 @Getter
 @Setter
 @AllArgsConstructor
@@ -21,4 +19,15 @@ public class RoleDetailResponseDTO {
     LocalDate createdDate;
     LocalDate updatedDate;
 
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class User {
+        Long id;
+        String name ;
+        String email ;
+        String avatar ;
+
+    }
 }

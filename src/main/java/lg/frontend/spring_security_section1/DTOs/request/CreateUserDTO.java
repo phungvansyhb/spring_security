@@ -25,7 +25,4 @@ public class CreateUserDTO {
     String password ;
     String avatar ;
     Long balance;
-    @Enumerated(EnumType.STRING)
-    Role role ;
-
 }

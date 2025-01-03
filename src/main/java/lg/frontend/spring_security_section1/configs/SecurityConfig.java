@@ -1,26 +1,34 @@
 package lg.frontend.spring_security_section1.configs;
 
+import lg.frontend.spring_security_section1.entities.Permission;
+import lg.frontend.spring_security_section1.entities.Role;
+import lg.frontend.spring_security_section1.entities.RolePermission;
+import lg.frontend.spring_security_section1.entities.RoleUser;
+import lg.frontend.spring_security_section1.exceptions.SecurityAccessDeniedHandler;
+import lg.frontend.spring_security_section1.repositories.RolePermissionRepository;
+import lg.frontend.spring_security_section1.repositories.RoleUserRepository;
 import lg.frontend.spring_security_section1.repositories.UserRepository;
-import lg.frontend.spring_security_section1.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -30,6 +38,19 @@ public class SecurityConfig {
     @Autowired
     UserRepository userRepository;
 
+    @Autowired
+    RoleUserRepository roleUserRepository;
+
+    @Autowired
+    RolePermissionRepository rolePermissionRepository;
+
+    @Autowired
+    SecurityAccessDeniedHandler securityAccessDeniedHandler;
+
+    @Autowired
+    @Lazy
+    private JWTRequestFilter jwtRequestFilter;
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -38,21 +59,17 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
-//                .requiresChannel(channel -> channel.anyRequest().requiresSecure())
+//                .requiresChannel(channel -> channel.anyRequest().requiresSecure())  // chi nhan request tu https
                 .authorizeHttpRequests(authorizationManagerRequestMatcherRegistry ->
                         authorizationManagerRequestMatcherRegistry
-                                .requestMatchers(HttpMethod.DELETE).hasRole("ADMIN")
-                                .requestMatchers("/api/admin/**").hasAnyRole("ADMIN")
-                                .requestMatchers("/api/users").authenticated()
-                                .requestMatchers("/api/role/**").permitAll()
-                                .requestMatchers("/api/login/**").permitAll()
-                                .requestMatchers("/welcome/**").permitAll()
+                                .requestMatchers("/api/login").permitAll()
+                                .requestMatchers("/welcome").permitAll()
                                 .anyRequest().authenticated())
-                .httpBasic(Customizer.withDefaults())   // Cấu hình này cho phép sử dụng HTTP Basic Authentication. Khi người dùng gửi yêu cầu, họ sẽ cần cung cấp thông tin xác thực (username và password) trong header của yêu cầu qua trường Authenication
+                //.httpBasic(Customizer.withDefaults())   // Cấu hình này cho phép sử dụng HTTP Basic Authentication. Khi người dùng gửi yêu cầu, họ sẽ cần cung cấp thông tin xác thực (username và password) trong header của yêu cầu qua trường Authenication
                 .sessionManagement(httpSecuritySessionManagementConfigurer ->
                         // không tạo session mà sẽ sử dụng token
-                        httpSecuritySessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-
+                        httpSecuritySessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 
@@ -61,15 +78,13 @@ public class SecurityConfig {
     @Bean
     public UserDetailsService userDetailsService() {
         return username -> {
-            System.out.println("user name :" + username);
             lg.frontend.spring_security_section1.entities.User user = userRepository.findByUsername(username);
             if (user != null) {
                 return User.withUsername(user.getUsername())
-                        .password(user.getPassword()) // trả về password stored in database and SS auto compare with password in request header
+                        .password(user.getPassword())
                         .build();
-            } else {
-                throw new UsernameNotFoundException("User not found");
             }
+            throw new UsernameNotFoundException("User not found");
         };
     }
 
@@ -80,4 +95,6 @@ public class SecurityConfig {
         authenticationManagerBuilder.userDetailsService(userDetailsService()).passwordEncoder(passwordEncoder());
         return authenticationManagerBuilder.build();
     }
+
+
 }

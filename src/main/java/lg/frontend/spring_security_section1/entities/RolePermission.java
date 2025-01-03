@@ -14,7 +14,7 @@ public class RolePermission {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY , cascade = CascadeType.ALL)
     @JoinColumn(name = "role_id")
     private Role role;
 

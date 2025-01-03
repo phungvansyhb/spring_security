@@ -14,7 +14,6 @@ public class UserListResponse {
     private String password ;
     private String phone ;
     private String avatar ;
-    private String role ;
     private LocalDateTime createdDate;
     private LocalDateTime updatedDate;
 }

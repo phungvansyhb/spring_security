@@ -1,6 +1,10 @@
 package lg.frontend.spring_security_section1.DTOs.response;
 
+import lg.frontend.spring_security_section1.entities.Permission;
+import lg.frontend.spring_security_section1.entities.Role;
 import lombok.*;
+
+import java.util.List;
 
 @Data
 @Getter
@@ -18,7 +22,9 @@ public class LoginResponseDTO {
 
     private Long balance;
 
-    private String role;
+    private List<Role> roleList;
+
+    private List<Permission> permissionList;
 
     private String token;
 

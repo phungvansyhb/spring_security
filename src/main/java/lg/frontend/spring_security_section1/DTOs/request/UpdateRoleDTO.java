@@ -15,6 +15,6 @@ import java.util.List;
 public class UpdateRoleDTO {
     private String roleName;
     private String roleDescription;
-    List<Permission> permissions;
-    List<User> users;
+    List<Long> permissionIds;
+    List<Long> userIds;
 }
